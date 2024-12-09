@@ -1,0 +1,120 @@
+#include <Arduino.h>
+#include <VarSpeedServo.h>
+
+#define SERVO_GARRA 13
+#define SERVO_DISTANCIA 11
+#define SERVO_ALTURA 10
+#define SERVO_BASE 9
+
+VarSpeedServo servo_distancia;
+VarSpeedServo servo_garra;
+VarSpeedServo servo_altura;
+VarSpeedServo servo_base;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Associar os servos
+  servo_garra.attach(SERVO_GARRA);
+  servo_distancia.attach(SERVO_DISTANCIA);
+  servo_altura.attach(SERVO_ALTURA);
+  servo_base.attach(SERVO_BASE);
+
+  // Definir posição inicial para todos os servos
+  servo_garra.slowmove(40, 5);       // Abre garra
+  servo_distancia.slowmove(70, 5);   // Posição neutra
+  servo_altura.slowmove(160, 5);     // Altura inicial
+  servo_base.slowmove(48, 5);        // Base inicial
+  delay(2000); // Tempo para concluir os movimentos
+
+  printServoPositions("Posição inicial");
+}
+
+void loop() {
+  caso1();
+  delay(5000); // Pausa para visualizar o próximo caso
+  caso2();
+  delay(5000); // Pausa para visualizar o próximo caso
+  caso3();
+  delay(5000); // Pausa para visualizar o próximo caso
+}
+
+void caso1() {
+  delay(2000);
+  
+  moveServo(servo_altura, 50, 30, "Subindo braço");
+  moveServo(servo_distancia, 110, 30, "Movendo até o alvo");
+  moveServo(servo_garra, 140, 30, "Fechando garra");
+  moveServo(servo_distancia, 90, 20, "Voltando à posição inicial");
+  moveServo(servo_altura, 160, 35, "Subindo braço alto");
+  moveServo(servo_base, 20, 30, "Rotacionando base para caixa");
+  moveServo(servo_distancia, 120, 30, "Movendo para a caixa");
+  moveServo(servo_garra, 40, 50, "Abrindo garra para soltar");
+  moveServo(servo_distancia, 45, 30, "Voltando para base");
+  moveServo(servo_base, 48, 30, "Rotacionando base para posição inicial");
+  moveServo(servo_altura, 30, 30, "Ajustando altura inicial");
+  moveServo(servo_garra, 40, 30, "Abre a garra");
+}
+
+void caso2() {
+  delay(2000);
+  
+  moveServo(servo_base, 76, 30, "Rotacionando para pegar objeto 2");
+  moveServo(servo_altura, 50, 30, "Subindo braço");
+  moveServo(servo_distancia, 110, 30, "Movendo até o alvo");
+  moveServo(servo_garra, 140, 30, "Fechando garra");
+  moveServo(servo_distancia, 90, 20, "Voltando à posição inicial");
+  moveServo(servo_altura, 160, 35, "Subindo braço alto");
+  moveServo(servo_base, 20, 30, "Rotacionando base para caixa");
+  moveServo(servo_distancia, 120, 30, "Movendo para a caixa");
+  moveServo(servo_garra, 40, 50, "Abrindo garra para soltar");
+  moveServo(servo_distancia, 45, 30, "Voltando para base");
+  moveServo(servo_base, 48, 30, "Rotacionando base para posição inicial");
+  moveServo(servo_altura, 30, 30, "Ajustando altura inicial");
+}
+
+void caso3() {
+  delay(2000);
+  
+  moveServo(servo_base, 53, 30, "Rotacionando para pegar objeto 3");
+  moveServo(servo_altura, 50, 30, "Subindo braço");
+  moveServo(servo_distancia, 122, 30, "Movendo até o alvo");
+  moveServo(servo_garra, 140, 30, "Fechando garra");
+  moveServo(servo_distancia, 90, 20, "Voltando à posição inicial");
+  moveServo(servo_altura, 160, 35, "Subindo braço alto");
+  moveServo(servo_base, 20, 30, "Rotacionando base para caixa");
+  moveServo(servo_distancia, 120, 30, "Movendo para a caixa");
+  moveServo(servo_garra, 40, 50, "Abrindo garra para soltar");
+  moveServo(servo_distancia, 48, 30, "Voltando para base");
+  moveServo(servo_base, 48, 30, "Rotacionando base para posição inicial");
+  moveServo(servo_altura, 30, 30, "Ajustando altura inicial");
+}
+
+// Função para imprimir os ângulos atuais dos servos de forma mais legível
+void printServoPositions(const char* etapa) {
+  Serial.println("---------------");
+  Serial.print("Etapa: ");
+  Serial.println(etapa);
+  Serial.print("Garra: ");
+  Serial.print(servo_garra.read());
+  Serial.println("°");
+  Serial.print("Distância: ");
+  Serial.print(servo_distancia.read());
+  Serial.println("°");
+  Serial.print("Altura: ");
+  Serial.print(servo_altura.read());
+  Serial.println("°");
+  Serial.print("Base: ");
+  Serial.print(servo_base.read());
+  Serial.println("°");
+  Serial.println("---------------");
+}
+
+// Função auxiliar para mover o servo e exibir os ângulos durante o movimento
+void moveServo(VarSpeedServo& servo, int targetAngle, int speed, const char* description) {
+  Serial.print(description);
+  Serial.println("...");
+  servo.slowmove(targetAngle, speed);
+  delay(2000); // Aguarde o movimento do servo
+  printServoPositions(description);
+}
